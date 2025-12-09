@@ -2,36 +2,13 @@
 
 工具使用说明
 点击链接
-https://github.com/Naturehi666/searchall/blob/main3.5.6/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.md
-
-欢迎关注我的公众号
-
-嗨嗨安全 ---- 更多好文章等你来读
-
-![图片](https://github.com/sujiawei00/naturahi/assets/58332933/82b33850-748d-4e03-8da0-d6552a4c91c5)
-
-searchall3.5可以快速搜索服务器中的有关username，passsword,账号，口令的敏感信息还有浏览器的账户密码。
-
-项目已开源，希望大家能够理解我的代码写的或许很乱，很糟糕的问题，谢谢！
-欢迎批评与指正
-
-
-如果你觉得这个项目对你有帮助，你可以请作者喝奶茶
-
-![image](https://github.com/Naturehi666/searchall/assets/58332933/07759057-9072-457c-a378-5d3aab611cd1)
-
-
-欢迎加入交流群！！！
-![5321f5e37a3001cc55f98f4b0ea79df](https://github.com/Naturehi666/searchall/assets/58332933/2b06c0f4-02e3-4017-b441-110e1bb026c9)
-
-
-如果二维码过期，添加客服拉你进群，备注searchall
-
-![image](https://github.com/Naturehi666/searchall/assets/58332933/2d27f49f-2442-4abd-8177-bb393fad09b3)
-
-
+https://github.com/gtasb/searchall/blob/main3.5.6/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.md
 
 开发者日志
+
+2025/12/10
+
+增加all参数，无需多次执行命令了
 
 5.18日 更新3.1版本
 
