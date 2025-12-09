@@ -3,19 +3,20 @@ package search
 import (
 	"bytes"
 	"fmt"
-	"golang.org/x/text/transform"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 	"runtime"
-	"searchall3.5/guize"
-	"searchall3.5/guolv"
-	"searchall3.5/jiexi"
 	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
+
+	"golang.org/x/text/transform"
+	"searchall3.5/guize"
+	"searchall3.5/guolv"
+	"searchall3.5/jiexi"
 )
 
 func compileRegexes(regexList []string) ([]*regexp.Regexp, error) {
@@ -145,7 +146,7 @@ func SearchConfigFiles(path string, info os.FileInfo, allRegexes []*regexp.Regex
 		if err != nil {
 			return results, err
 		}
-		buffer.WriteString(fmt.Sprintf("File: %s\n", absPath))
+		buffer.WriteString(fmt.Sprintf("[+] File: %s\n", absPath))
 
 		// 将所有行都填充到相同的长度
 		for _, line := range lines {
@@ -173,7 +174,7 @@ func SearchConfigFiles(path string, info os.FileInfo, allRegexes []*regexp.Regex
 	return results, nil
 }
 
-func Searchall(path string, userRegexList []string, userOnlyFlag bool, customFileTypeList string, extenOnlyFlag bool, sizeLimit int64, charLimit int) {
+func Searchall(path string, userRegexList []string, userOnlyFlag bool, customFileTypeList string, extenOnlyFlag bool, sizeLimit int64, charLimit int, outputFile string) {
 
 	//获取cpu核心数
 	numCores := runtime.NumCPU() // 根据系统的能力调整此值
@@ -186,7 +187,9 @@ func Searchall(path string, userRegexList []string, userOnlyFlag bool, customFil
 
 	//runtime.GOMAXPROCS(runtime.NumCPU() / 4)
 
-	outputFile := "search.txt"
+	if outputFile == "" {
+		outputFile = "all_result.txt"
+	}
 	outputFilePath, err := filepath.Abs(outputFile)
 
 	if _, err := os.Stat(path); os.IsNotExist(err) { // 检查路径是否存在
@@ -218,7 +221,7 @@ func Searchall(path string, userRegexList []string, userOnlyFlag bool, customFil
 		return
 	}
 
-	fmt.Println("Searching files in", path)
+	fmt.Println("[+] Searching files in", path)
 	fmt.Println("This may take a while. Please wait...")
 	fmt.Printf("Results will be saved to %s\n", outputFilePath)
 
@@ -332,7 +335,7 @@ func Searchall(path string, userRegexList []string, userOnlyFlag bool, customFil
 			if !ok {
 				// channel has been closed
 				end := time.Now()
-				fmt.Printf(fmt.Sprintf("\nsearch finished at %s. Total search time: %v.\n", end.Format(time.RFC3339), end.Sub(start)))
+				fmt.Printf(fmt.Sprintf("\n[+] search finished at %s. Total search time: %v.\n", end.Format(time.RFC3339), end.Sub(start)))
 				close(writeWorkerCh)
 				wg.Wait()
 				return

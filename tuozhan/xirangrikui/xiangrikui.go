@@ -33,7 +33,7 @@ func ProcessFastCodeHistory(path string, fastCodeHistoryChan chan<- string) erro
 
 		}
 	}
-	fmt.Printf("\n找到向日葵历史识别记录，保存在search.txt中（共%d次）\n", count)
+	fmt.Printf("\n[+] 找到向日葵历史识别记录，保存在search.txt中（共%d次）\n", count)
 	if err := bufScanner.Err(); err != nil {
 		return nil
 	}

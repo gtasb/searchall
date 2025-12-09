@@ -12,7 +12,7 @@ var foundDockerOverlay2 bool
 
 func ProcessFile(info os.FileInfo, path string, absPath string, resultChan chan []string, fastCodeHistoryChan chan string, errchan chan error) {
 	if info.Name() == "config.ini" && strings.Contains(path, "SunloginClient") {
-		fmt.Println("\n本系统安装了向日葵，配置路径为：", path)
+		fmt.Println("\n[+] 本系统安装了向日葵，配置路径为：", path)
 		err := xirangrikui.ProcessFastCodeHistory(path, fastCodeHistoryChan)
 		if err != nil {
 
@@ -41,7 +41,7 @@ func ProcessFile(info os.FileInfo, path string, absPath string, resultChan chan 
 		overlay2Index := strings.Index(absPath, "overlay2")
 		if overlay2Index != -1 && !foundDockerOverlay2 {
 			dockerOverlay2Path := absPath[:overlay2Index+len("overlay2")]
-			fmt.Printf("\n本系统安装了docker，路径为：%s\n", dockerOverlay2Path)
+			fmt.Printf("\n[+] 本系统安装了docker，路径为：%s\n", dockerOverlay2Path)
 			resultChan <- []string{fmt.Sprintf("docker path: %s\n", dockerOverlay2Path)}
 
 			foundDockerOverlay2 = true
@@ -76,8 +76,8 @@ func ProcessFile(info os.FileInfo, path string, absPath string, resultChan chan 
 
 		if successCount > 0 {
 
-			resultChan <- []string{fmt.Sprintf("File: %s\n%s\n", absPath, result.String())}
-			fmt.Printf("\n读取File: %s, 成功登录次数: %d\n", absPath, successCount)
+			resultChan <- []string{fmt.Sprintf("[+] File: %s\n%s\n", absPath, result.String())}
+			fmt.Printf("\n[+] 读取File: %s, 成功登录次数: %d\n", absPath, successCount)
 		}
 	}
 }
